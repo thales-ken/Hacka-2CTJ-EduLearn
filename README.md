@@ -3,7 +3,26 @@ Hackathon 2CTJ EduLearn Grupo A
 
 ## Descrição
 
-Este projeto é uma aplicação de gestão de times e tarefas.
+Este projeto foi desenvolvido para o Hackathon FIAP 2CTJ. 
+
+```
+A EduLearn, uma plataforma dedicada ao aprendizado digital, busca
+transformar a experiência educacional de professores e alunos. Com o intuito
+de centralizar e facilitar o acesso a conteúdos educacionais, a EduLearn está
+desenvolvendo um sistema que permitirá aos professores gerenciar seus
+vídeos de ensino e aos alunos acessar conteúdos personalizados.
+Contexto do Problema: Professores enfrentam dificuldades em gerenciar
+seus vídeos educacionais, distribuídos em diferentes plataformas, sem controle
+centralizado. Alunos, por sua vez, têm dificuldade em encontrar vídeos
+específicos de seus professores, comprometendo a continuidade do
+aprendizado e o engajamento no estudo.
+Objetivo do Sistema: Criar uma plataforma onde professores possam
+cadastrar, editar e excluir vídeos educacionais de forma centralizada, enquanto
+alunos possam acessar conteúdos específicos de seus professores vinculados.
+A autenticação de usuários será feita pelo Firebase Authentication ou
+Supabase, e o backend será construído usando Node.js + Express com
+Firestore, SQL ou MongoDB como banco de dados.
+```
 
 ## Instalação Backend
 
