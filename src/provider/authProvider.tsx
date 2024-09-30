@@ -5,34 +5,35 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Define the AuthContextType interface
 export interface AuthContextType {
   user: User | null;
   signIn: (email: string, password: string) => Promise<User | null>;
   signOut: () => Promise<void>;
+  checkSession: () => Promise<boolean>;
 }
 
-// Create the AuthContext
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// AuthProvider component
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  const checkSession = async (): Promise<boolean> => {
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) {
+      console.error("Error getting session:", sessionError.message);
+      return false;
+    }
+    if (sessionData?.session) {
+      setUser(sessionData.session.user);
+      return true;
+    } else {
+      setUser(null);
+      return false;
+    }
+  };
+
   useEffect(() => {
-    const getSessionAndUser = async () => {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) {
-        console.error("Error getting session:", sessionError.message);
-        return;
-      }
-      if (sessionData?.session) {
-        setUser(sessionData.session.user);
-      } else {
-        setUser(null);
-      }
-    };
-    getSessionAndUser();
+    checkSession();
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -49,12 +50,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error signing out:", error.message);
-      throw error; // Rethrow to handle in Header
+      throw error; 
     }
-    setUser(null); // Clear user state after signing out
+    setUser(null);
   };
 
-  const contextValue = useMemo(() => ({ user, signIn, signOut }), [user]);
+  const contextValue = useMemo(
+    () => ({ user, signIn, signOut, checkSession }), 
+    [user]
+  );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };

@@ -1,5 +1,7 @@
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form, Spinner, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
+import instance from '../services/supabase';
+import Thumbnail from '../assets/thumbnail';
 
 interface Video {
     id_video: number;
@@ -9,30 +11,108 @@ interface Video {
 }
 
 interface VideoFormProps {
-    currentVideo?: Video | null;
+    currentVideo?: Video | null,
+    onSuccessfulAction: () => void;
 }
 
-const VideoForm: React.FC<VideoFormProps> = ({ currentVideo }) => {
+const VideoForm: React.FC<VideoFormProps> = ({ currentVideo, onSuccessfulAction }) => {
     const [show, setShow] = useState(false);
     const [videoName, setVideoName] = useState("");
     const [videoUrl, setVideoUrl] = useState("");
     const [videoComment, setVideoComment] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => setShow(false);
 
+    async function handleDelete() {
+        try {
+            setLoading(true);
+            const token = JSON.parse(localStorage.getItem("sb-yhuhhyjrbuveavowpwlj-auth-token") || '""');
+            const response = await instance.delete(`/videos/${currentVideo?.id_video}`, {
+                headers: { Authorization: `Bearer ${token.access_token}` }
+            });
+            console.log(response);
+            alert("Aula excluída com sucesso!");
+            onSuccessfulAction();
+            handleClose();
+        } catch (error) {
+            console.error("Error deleting video:", error);
+            alert("Erro ao excluir a aula!");
+            onSuccessfulAction()
+        } finally {
+            setLoading(false);
+        }
+    }
+    async function handleUpdate() {
+        try {
+            if (!videoName || !videoUrl || !videoComment) {
+                alert("Todos os campos devem ser preenchidos.");
+                return;
+            }
+            setLoading(true);
+            const token = JSON.parse(localStorage.getItem("sb-yhuhhyjrbuveavowpwlj-auth-token") || '""');
+            const updateData = {
+                nome_video: videoName,
+                video_url:  videoUrl,
+                comentario: videoComment
+            };
+            console.log(updateData)
+            const response = await instance.put(`/videos/${currentVideo?.id_video}`, updateData, {
+                headers: { Authorization: `Bearer ${token.access_token}` }
+            });
+            console.log(response);
+            alert("Aula atualizada com sucesso!");
+            onSuccessfulAction();
+            handleClose();
+        } catch (error) {
+            console.error("Error updating video:", error);
+            alert("Erro ao atualizar a aula!");
+            onSuccessfulAction()
+        } finally {
+            setLoading(false);
+        }
+    }
+    async function handleCreate() {
+        try {
+            if (!videoName || !videoUrl || !videoComment) {
+                alert("Todos os campos devem ser preenchidos.");
+                return;
+            }
+            setLoading(true);
+            const token = JSON.parse(localStorage.getItem("sb-yhuhhyjrbuveavowpwlj-auth-token") || '""');
+            const createData = {
+                nome_video: videoName,
+                video_url: videoUrl,
+                comentario: videoComment
+            };
+            console.log(createData)
+            const response = await instance.post(`/videos`, createData, {
+                headers: { Authorization: `Bearer ${token.access_token}` }
+            });
+            console.log(response);
+            alert("Aula criada com sucesso!");
+            onSuccessfulAction();
+            handleClose();
+        } catch (error) {
+            console.error("Error creating video:", error);
+            alert("Erro ao criar a aula!");
+            onSuccessfulAction()
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const handleShow = () => {
         if (currentVideo) {
-            // Preload data if editing a video
             setVideoName(currentVideo.nome_video);
             setVideoUrl(currentVideo.video_url);
             setVideoComment(currentVideo.comentario);
         } else {
-            // Reset the form if creating a new video
             setVideoName("");
             setVideoUrl("");
             setVideoComment("");
-        }
-        setShow(true); // Show the modal after setting/resetting the form fields
+        } 
+        setShow(true);
     };
 
     return (
@@ -66,12 +146,16 @@ const VideoForm: React.FC<VideoFormProps> = ({ currentVideo }) => {
                         </Form.Group>
                         <Form.Group controlId="formVideoUrl" className="mt-3">
                             <Form.Label>URL do Vídeo</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={videoUrl}
-                                onChange={(e) => setVideoUrl(e.target.value)}
-                                placeholder="Insira o URL do vídeo"
-                            />
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text id="basic-addon3" style={{ color: "rgb(150,150,150)" }}>
+                                    https://youtube.com/watch/?v=
+                                </InputGroup.Text>
+                                <Form.Control aria-describedby="basic-addon3" type="text"
+                                    value={videoUrl}
+                                    onChange={(e) => setVideoUrl(e.target.value)}
+                                    placeholder="Insira o URL do vídeo" />
+                                    <Thumbnail youtubeId={videoUrl}/>
+                            </InputGroup>
                         </Form.Group>
                         <Form.Group controlId="formVideoComment" className="mt-3">
                             <Form.Label>Comentário</Form.Label>
@@ -86,13 +170,43 @@ const VideoForm: React.FC<VideoFormProps> = ({ currentVideo }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     {currentVideo && (
-                        <Button variant="danger">
-                            Excluir Aula
+                        <>
+                            <Button variant="danger" onClick={handleDelete} disabled={loading}>
+                                {loading ? (
+                                    <>
+                                        <Spinner as="span" animation="border" size="sm" style={{ marginRight: '5px' }} />
+                                        Excluindo...
+                                    </>
+                                ) : (
+                                    "Excluir Aula"
+                                )}
+                            </Button>
+                            <Button
+                                style={{ backgroundColor: "rgb(0, 200, 250)" }}
+                                onClick={handleUpdate}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <Spinner as="span" animation="border" size="sm" style={{ marginRight: '5px' }} />
+                                ) : (
+                                    "Alterar Aula"
+                                )}
+                            </Button>
+                        </>
+                    )}
+                    {!currentVideo && (
+                        <Button
+                            style={{ backgroundColor: "rgb(0, 200, 250)" }}
+                            onClick={handleCreate}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <Spinner as="span" animation="border" size="sm" style={{ marginRight: '5px' }} />
+                            ) : (
+                                "Criar Aula"
+                            )}
                         </Button>
                     )}
-                    <Button style={{ backgroundColor: "rgb(0, 200, 250)" }}>
-                        {currentVideo ? "Alterar Aula" : "Criar Aula"}
-                    </Button>
                 </Modal.Footer>
             </Modal>
         </>
