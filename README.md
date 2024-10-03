@@ -1,4 +1,4 @@
-# Hacka-2CTJ-EduLearn
+# :trophy: Projeto Vencedor - Hackathon-2CTJ FIAP
 Hackathon 2CTJ EduLearn Grupo A
 
 ## Descrição
