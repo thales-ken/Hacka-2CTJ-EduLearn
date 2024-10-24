@@ -13,6 +13,11 @@ class LoginPage(object):
             ec.presence_of_element_located(element)
         )
 
+    def wait_for_url(self, url):
+        WebDriverWait(self.driver, 10).until(
+            ec.url_contains(url)
+        )
+
     def enter_username(self, username):
         self.wait_for_element(self.locator.USERNAME)
         self.driver.find_element(*self.locator.USERNAME).send_keys(username)
@@ -29,10 +34,10 @@ class LoginPage(object):
         self.enter_username(username)
         self.enter_password(password)
         self.click_login_button()
-        WebDriverWait(self.driver, 10).until(ec.url_contains("/dashboard"))
 
     def login_with_valid_credentials(self):
         self.login("usuario@aluno.com", "123456")
+        self.wait_for_url("/dashboard")
         return LoginPage(self.driver)
 
     def login_with_invalid_credentials(self):

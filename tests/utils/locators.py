@@ -5,4 +5,4 @@ class LoginPageLocators(object):
     USERNAME = (By.ID, 'formEmail')
     PASSWORD = (By.ID, 'formPassword')
     SUBMIT = (By.XPATH, '//*[@id="root"]/div/div/div/form/button')
-    ERROR_MESSAGE = (By.CLASS_NAME, 'fade alert alert-danger show')
+    ERROR_MESSAGE = (By.XPATH, '//div[contains(@class, "alert-danger")]')
