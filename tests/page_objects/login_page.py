@@ -29,6 +29,7 @@ class LoginPage(object):
         self.enter_username(username)
         self.enter_password(password)
         self.click_login_button()
+        WebDriverWait(self.driver, 10).until(ec.url_contains("/dashboard"))
 
     def login_with_valid_credentials(self):
         self.login("usuario@aluno.com", "123456")
