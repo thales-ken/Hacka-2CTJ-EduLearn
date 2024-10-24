@@ -44,4 +44,3 @@ class LoginPage(object):
         self.login("usuario@errado.com", "111111")
         self.wait_for_element(self.locator.ERROR_MESSAGE)
         return self.driver.find_element(*self.locator.ERROR_MESSAGE).text
-
