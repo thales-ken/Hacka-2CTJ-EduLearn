@@ -4,7 +4,7 @@ from selenium import webdriver
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
-        self.driver.get("http://localhost:5173/login")
+        self.driver.get("http://localhost:5173")
 
     def tearDown(self):
         self.driver.close()
