@@ -14,10 +14,10 @@ class LoginPageLocators(object):
 
 
 class DashboardPageLocators(object):
-    VIDEO_PLAYER = (By.XPATH, '//iframe[@title="YouTube video player"]')
     TITLE = (By.XPATH, '//div[@class="card-title h5"]')
+    VIDEO_PLAYER = (By.XPATH, '//iframe[@title="YouTube video player"]')
     TEXT = (By.XPATH, '//p[@class]')
-    VIDEO_TABLE = (By.XPATH, '//div[@class="card"]//table[@class="table table-striped table-bordered table-hover"]')
     CURRENT_VIDEO = (By.XPATH,
-                     '//div[@class="card"]//table[@class="table table-striped table-bordered table-hover"]//button[contains(@class, "active")')
-    ...
+                     '//div[@class="card"]//table[@class="table table-striped table-bordered table-hover"]//button[contains(@class, "active")]')
+    NAVBAR_BUTTON = (By.CLASS_NAME, 'navbar-toggler collapsed')
+    LOGOUT_BUTTON = (By.XPATH, '//a[@href="#" and text()="Sair"]')

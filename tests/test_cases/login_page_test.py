@@ -6,7 +6,6 @@ from page_objects.home_page import HomePage
 class LoginPageTest(BaseTest):
     def setUp(self):
         super().setUp()
-
         home_page = HomePage(self.driver)
         home_page.click_login_button()
 
