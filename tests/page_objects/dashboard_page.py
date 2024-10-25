@@ -43,7 +43,7 @@ class DashboardPage(object):
         self.wait_for_url("/dashboard")
         self.wait_dashboard_loading()
         hamburger_button = self.driver.find_elements(*self.locator.NAVBAR_BUTTON)
-        if hamburger_button:
+        if hamburger_button and hamburger_button[0].is_displayed():
             hamburger_button[0].click()
         self.wait_for_element(self.locator.LOGOUT_BUTTON)
         self.driver.find_element(*self.locator.LOGOUT_BUTTON).click()
