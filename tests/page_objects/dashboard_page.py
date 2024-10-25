@@ -12,13 +12,22 @@ class DashboardPage(object):
 
     def wait_for_element(self, element):
         WebDriverWait(self.driver, 5).until(
-            ec.presence_of_element_located(element)
+            ec.visibility_of_element_located(element)
         )
 
     def wait_for_url(self, url):
         WebDriverWait(self.driver, 10).until(
             ec.url_contains(url)
         )
+
+    def wait_dashboard_loading(self):
+        if "Seu professor ainda não postou nenhum vídeo. " \
+           "Entre em contato com nosso suporte ao aluno!" in self.locator.TEXT:
+            print("Erro")
+        else:
+            WebDriverWait(self.driver, 10).until(
+                ec.visibility_of_element_located(self.locator.VIDEO_PLAYER)
+            )
 
     def list_elements(self):
         self.wait_for_element(self.locator.TITLE)
@@ -32,8 +41,10 @@ class DashboardPage(object):
 
     def click_logout_button(self):
         self.wait_for_url("/dashboard")
+        self.wait_dashboard_loading()
         hamburger_button = self.driver.find_elements(*self.locator.NAVBAR_BUTTON)
         if hamburger_button:
-            print("hamburger button detected")
             hamburger_button[0].click()
-        self.wait_for_element(self.locator.LOGOUT_BUTTON).click()
+        self.wait_for_element(self.locator.LOGOUT_BUTTON)
+        self.driver.find_element(*self.locator.LOGOUT_BUTTON).click()
+        self.wait_for_url('/')

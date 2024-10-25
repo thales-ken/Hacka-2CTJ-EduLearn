@@ -19,5 +19,5 @@ class DashboardPageLocators(object):
     TEXT = (By.XPATH, '//p[@class]')
     CURRENT_VIDEO = (By.XPATH,
                      '//div[@class="card"]//table[@class="table table-striped table-bordered table-hover"]//button[contains(@class, "active")]')
-    NAVBAR_BUTTON = (By.CLASS_NAME, 'navbar-toggler collapsed')
-    LOGOUT_BUTTON = (By.XPATH, '//a[@href="#" and text()="Sair"]')
+    NAVBAR_BUTTON = (By.XPATH, '//button[@aria-controls="basic-navbar-nav"]')
+    LOGOUT_BUTTON = (By.XPATH, '//a[text()="Sair"]')

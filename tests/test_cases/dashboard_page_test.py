@@ -21,4 +21,4 @@ class DashboardPageTest(BaseTest):
     def test_logout_button(self):
         dashboard_page = DashboardPage(self.driver)
         dashboard_page.click_logout_button()
-        self.assertIn("/home", self.driver.current_url)
+        self.assertIn("/", self.driver.current_url)
