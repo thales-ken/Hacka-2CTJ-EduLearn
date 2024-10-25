@@ -70,3 +70,7 @@ Senha: 123456
 ```
 
 <a>[Video de Uso](https://www.youtube.com/watch?v=ytlgLnzrtJI)</a>
+
+## Testes
+
+Os testes End-to-End foram desenvolvidos posteriormente à entrega e avaliação do projeto. Realizei o desenvolvimento utilizando Python e Selenium no padrão de projeto POM (Page Object Models)
